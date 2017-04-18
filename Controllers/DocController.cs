@@ -27,9 +27,10 @@ namespace Document_Upload.Controllers
             return View("Admin");
         }
 
-        public FileResult GetDoc(DocModel model)
+        public ActionResult GetDoc(DocModel model)
         {
-            return File(docDao.GetDoc(model), ".pdf", "Test File");
+            var document = docDao.GetDoc(model);
+            return File(System.IO.File.ReadAllBytes(document.ToString()), ".pdf", "Test File");
         }
 
         public ActionResult Student(DocModel model)
@@ -38,9 +39,34 @@ namespace Document_Upload.Controllers
             return View("Student");
         }
 
-        public void AddDoc(DocModel model)
+        public ActionResult AddDoc(DocModel model)
         {
-            docDao.AddDoc(model.FirstName, model.LastName, model.Document);
+            if (model.Document == null || model.Document.ContentLength == 0)
+            {
+                ModelState.AddModelError(string.Empty, "This field is required.");
+            }
+            if (string.IsNullOrEmpty(model.FirstName) || string.IsNullOrEmpty(model.LastName))
+            {
+                ModelState.AddModelError(string.Empty, "Both name fields are required.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                byte[] fileData = null;
+                using (var binaryReader = new BinaryReader(Request.Files[0].InputStream))
+                {
+                    fileData = binaryReader.ReadBytes(Request.Files[0].ContentLength);
+                }
+
+                bool result = docDao.AddDoc(model.FirstName, model.LastName, fileData);
+
+                if (result == true)
+                {
+                    return View("Success");
+                }
+            }
+
+            return View("Student");
         }
     }
 }

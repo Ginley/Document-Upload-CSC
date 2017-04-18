@@ -2,7 +2,28 @@
 @{
     ViewBag.Title = "User";
 }
+@model Document_Upload.Models.DocModel
 
-<h2>User</h2>
+    <h2>Wayne State University</h2>
+    @Html.ValidationSummary(true)
 
-<p>This page is for users to upload documents</p>
+    <!--This is the start of the center -->
+    <div id="middle">
+        @using (Html.BeginForm("AddDoc", "Doc", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.LabelFor(model => model.FirstName) <br />
+            @Html.TextBoxFor(model => model.FirstName)            <br />
+            @Html.LabelFor(model => model.LastName)            <br />
+            @Html.TextBoxFor(model => model.LastName)            <br />
+            @Html.LabelFor(model => model.Document)            <br />
+            @Html.TextBoxFor(model => model.Document, new { type = "file" })            <br />
+
+            <input type="submit" value="Send">
+         }
+    </div>
+
+
+    <!--This is the start of the footer-->
+    <div id="footer">
+        <p>Wayne State University</p>
+    </div>

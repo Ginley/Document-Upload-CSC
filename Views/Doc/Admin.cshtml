@@ -1,7 +1,31 @@
 ﻿@{
     ViewBag.Title = "Admin";
 }
+
+@model Document_Upload.Models.DocModel
+
 <h2>@ViewBag.Title.</h2>
 <h3>@ViewBag.Message</h3>
 
-<p>This page is for admins to retrieve documents</p>
+<h2>Wayne State University</h2>
+@Html.ValidationSummary(true)
+
+<!--This is the start of the center -->
+<p>Type in the students first and last name to get the document associated to them.</p>
+<div id="middle">
+    @using (Html.BeginForm("GetDoc", "Doc", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.LabelFor(model => model.FirstName) <br />
+            @Html.TextBoxFor(model => model.FirstName)            <br />
+            @Html.LabelFor(model => model.LastName)            <br />
+            @Html.TextBoxFor(model => model.LastName)            <br />
+
+            <input type="submit" value="Send">
+    }
+</div>
+
+
+<!--This is the start of the footer-->
+<div id="footer">
+    <p>Wayne State University</p>
+</div>
